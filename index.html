@@ -84,33 +84,34 @@
             rightTriangleL: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="30,130 170,130 30,30" fill="none" stroke="black" stroke-width="1.5"/><line x1="30" y1="30" x2="85" y2="130" stroke="black" stroke-width="1.5"/><rect x="30" y="125" width="5" height="5" fill="none" stroke="black"/><text x="15" y="140" font-family="serif" font-style="italic">C</text><text x="175" y="140" font-family="serif" font-style="italic">B</text><text x="15" y="30" font-family="serif" font-style="italic">A</text><text x="82" y="145" font-family="serif" font-style="italic">L</text><path d="M 30 50 A 20 20 0 0 0 41 46" fill="none" stroke="black"/><path d="M 30 60 A 30 30 0 0 0 46 53" fill="none" stroke="black"/></svg>`,
             isoTriangle: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><circle cx="100" cy="80" r="60" fill="none" stroke="black" stroke-width="1.5"/><polygon points="52,116 148,116 100,20" fill="none" stroke="black" stroke-width="1.5"/><circle cx="100" cy="80" r="1.5" fill="black"/><text x="35" y="125" font-family="serif" font-style="italic">A</text><text x="155" y="125" font-family="serif" font-style="italic">B</text><text x="95" y="15" font-family="serif" font-style="italic">C</text><text x="105" y="85" font-family="serif" font-style="italic">O</text></svg>`,
             isoTriangleIn: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="20,130 180,130 100,20" fill="none" stroke="black" stroke-width="1.5"/><circle cx="100" cy="89.3" r="40.7" fill="none" stroke="black" stroke-width="1.5"/><circle cx="100" cy="89.3" r="1.5" fill="black"/><text x="5" y="140" font-family="serif" font-style="italic">A</text><text x="185" y="140" font-family="serif" font-style="italic">B</text><text x="95" y="15" font-family="serif" font-style="italic">C</text><text x="105" y="93" font-family="serif" font-style="italic">O</text></svg>`,
-            isoTriangleH: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="40,130 160,130 100,20" fill="none" stroke="black" stroke-width="1.5"/><line x1="100" y1="20" x2="100" y2="130" stroke="black" stroke-width="1.5" stroke-dasharray="4"/><rect x="100" y="125" width="5" height="5" fill="none" stroke="black"/><text x="25" y="140" font-family="serif" font-style="italic">A</text><text x="165" y="140" font-family="serif" font-style="italic">B</text><text x="95" y="15" font-family="serif" font-style="italic">C</text><text x="105" y="145" font-family="serif" font-style="italic">H</text></svg>`
+            isoTriangleH: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="40,130 160,130 100,20" fill="none" stroke="black" stroke-width="1.5"/><line x1="100" y1="20" x2="100" y2="130" stroke="black" stroke-width="1.5" stroke-dasharray="4"/><rect x="100" y="125" width="5" height="5" fill="none" stroke="black"/><text x="25" y="140" font-family="serif" font-style="italic">A</text><text x="165" y="140" font-family="serif" font-style="italic">B</text><text x="95" y="15" font-family="serif" font-style="italic">C</text><text x="105" y="145" font-family="serif" font-style="italic">H</text></svg>`,
+            isoTriangleMedNoCircle: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="40,130 160,130 100,20" fill="none" stroke="black" stroke-width="1.5"/><line x1="100" y1="20" x2="100" y2="130" stroke="black" stroke-width="1.5" stroke-dasharray="4"/><line x1="40" y1="130" x2="130" y2="75" stroke="black" stroke-width="1.5"/><rect x="100" y="125" width="5" height="5" fill="none" stroke="black"/><text x="25" y="140" font-family="serif" font-style="italic">A</text><text x="165" y="140" font-family="serif" font-style="italic">B</text><text x="95" y="15" font-family="serif" font-style="italic">C</text><text x="105" y="145" font-family="serif" font-style="italic">H</text><text x="140" y="75" font-family="serif" font-style="italic">M</text></svg>`
         };
 
         const ineqA = [
-            `$(x^2 - 4)(x^2 - x - 2)(-x^2 - 3) \\ge 0$`,
-            `$(-x^2-2x-1)(x^2-7x+12)(x^2+5) < 0$`,
-            `$(3x^2 - x - 2)(1 - x^2)(x^2 + 4) \\ge 0$`,
-            `$(2x^2 - 5x + 2)(-x^2 + 3x - 4) \\ge 0$`,
-            `$(x^2 - 9)(x^2 + 2x + 1) > 0$`,
-            `$(-2x^2 + 7x - 3)(x^2 + x + 5) \\le 0$`,
-            `$(x^2-5x+6)(-x^2-4) \\ge 0$`,
-            `$(4x^2 - 1)(-x^2 + 2x - 1) < 0$`,
-            `$(x^2 + 6x + 8)(x^2 - 4x + 3) \\le 0$`,
-            `$(x^2 - 16)(x^2 + 4x + 4)(-x^2 - 1) \\ge 0$`
+            `$(-x^2 - 1)(x^2 - 2x - 15)(x^2 + 3x) < 0$`,
+            `$(x^2 + 4)(x^2 - 5x + 6)(x^2 - 4) \\ge 0$`,
+            `$(-3x^2 - 2)(x^2 + x - 2)(x^2 - x) > 0$`,
+            `$(2x^2 + 1)(x^2 - x - 12)(x^2 - 16) \\le 0$`,
+            `$(-x^2 - 5)(x^2 + 4x + 3)(x^2 + 3x) \\ge 0$`,
+            `$(x^2 + x + 1)(x^2 - 7x + 10)(x^2 - 2x) < 0$`,
+            `$(-x^2 - 3x - 5)(x^2 + 2x - 8)(x^2 - 4) \\ge 0$`,
+            `$(x^2 + 2)(x^2 - 6x + 5)(x^2 - 1) \\le 0$`,
+            `$(-2x^2 - 7)(x^2 - 3x - 10)(x^2 + 2x) > 0$`,
+            `$(x^2 + 6)(x^2 + 5x + 6)(x^2 - 9) \\le 0$`
         ];
 
         const ineqB = [
             `$\\dfrac{5}{x^2-4x+3} \\le \\dfrac{1}{x-1} + \\dfrac{2}{3-x}$`,
-            `$\\dfrac{x^2}{x+3} - \\dfrac{x}{x-1} \\le \\dfrac{4}{x^2+2x-3}$`,
-            `$\\dfrac{3}{x^2+x-2} \\ge \\dfrac{1}{x+2} + \\dfrac{2}{x-1}$`,
-            `$\\dfrac{2x}{x-2} - \\dfrac{x}{x+2} \\ge \\dfrac{4}{x^2-4}$`,
-            `$\\dfrac{x}{x-3} + \\dfrac{2x}{x+3} \\le \\dfrac{18}{x^2-9}$`,
-            `$\\dfrac{x}{x-1} \\ge \\dfrac{5}{x^2-1} + \\dfrac{1}{x+1}$`,
-            `$\\dfrac{x^2+1}{x-2} + \\dfrac{x-1}{x+2} \\le \\dfrac{8}{x^2-4}$`,
-            `$\\dfrac{3x}{x+1} - \\dfrac{2}{x-1} \\ge \\dfrac{5x}{x^2-1}$`,
-            `$\\dfrac{1}{x} + \\dfrac{x}{x-2} \\le \\dfrac{2}{x^2-2x}$`,
-            `$\\dfrac{x+3}{x-1} + \\dfrac{x-3}{x+1} \\le \\dfrac{4}{x^2-1}$`
+            `$\\dfrac{x^2}{x+3} - \\dfrac{x}{x-1} \\le \\dfrac{4}{3-2x-x^2}$`,
+            `$\\dfrac{3}{2-x-x^2} \\ge \\dfrac{1}{x+2} + \\dfrac{2}{x-1}$`,
+            `$\\dfrac{2x}{x-2} - \\dfrac{x}{x+2} \\ge \\dfrac{4}{4-x^2}$`,
+            `$\\dfrac{x}{x-3} + \\dfrac{2x}{x+3} \\le \\dfrac{18}{9-x^2}$`,
+            `$\\dfrac{x}{x-1} \\ge \\dfrac{5}{1-x^2} + \\dfrac{1}{x+1}$`,
+            `$\\dfrac{x^2+1}{x-2} + \\dfrac{x-1}{x+2} \\le \\dfrac{8}{4-x^2}$`,
+            `$\\dfrac{3x}{x+1} - \\dfrac{2}{1-x} \\ge \\dfrac{5x}{x^2-1}$`,
+            `$\\dfrac{1}{x} + \\dfrac{x}{x-2} \\le \\dfrac{2}{2x-x^2}$`,
+            `$\\dfrac{x+3}{x-1} + \\dfrac{x-3}{x+1} \\le \\dfrac{4}{1-x^2}$`
         ];
 
         const tasksData = {
@@ -214,9 +215,9 @@
                     svg: svgs.isoTriangleH
                 },
                 {
-                    text: (p) => `В равнобедрен $\\Delta ABC$ радиусът на описаната окръжност е $R = ${p.r} \\text{ cm}$, а височината към основата е $h_c = ${p.h} \\text{ cm}$. Да се намерят дължините на бедрото и основата на триъгълника.`,
-                    params: [{r: '6{,}25', h: 8}, {r: '12{,}5', h: 9}, {r: '12{,}5', h: 16}, {r: '15{,}625', h: 20}, {r: '3{,}125', h: 4}],
-                    svg: svgs.isoTriangleH
+                    text: (p) => `В равнобедрен $\\Delta ABC$ височината към основата $AB$ е $h_c = ${p.h} \\text{ cm}$, а медианата към бедрото $BC$ е $AM = ${p.m} \\text{ cm}$. Намерете дължината на основата $AB$.`,
+                    params: [{h: 18, m: 15}, {h: 24, m: 15}, {h: 12, m: '7{,}5'}, {h: 36, m: 30}, {h: 30, m: 39}, {h: 15, m: '19{,}5'}],
+                    svg: svgs.isoTriangleMedNoCircle
                 }
             ],
             task7: [
@@ -229,12 +230,12 @@
                     params: [{ab: 6, cd: 3}, {ab: 15, cd: 10}, {ab: 20, cd: 12}, {ab: 28, cd: 21}]
                 },
                 {
-                    text: (p) => `Трапец е вписан в окръжност. Основите му са $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$, а височината му е $${p.h} \\text{ cm}$. Да се намери радиусът на окръжността.`,
-                    params: [{ab: 21, cd: 9, h: 8}, {ab: 16, cd: 12, h: 14}, {ab: 24, cd: 10, h: 7}]
+                    text: (p) => `Трапец е вписан в окръжност. Основите му са $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$, а височината му е $${p.h} \\text{ cm}$. Да се намерят бедрото и диагоналът на трапеца.`,
+                    params: [{ab: 21, cd: 9, h: 8}, {ab: 14, cd: 4, h: 12}, {ab: 21, cd: 11, h: 12}, {ab: 25, cd: 7, h: 12}, {ab: 28, cd: 12, h: 15}, {ab: 25, cd: 11, h: 24}]
                 },
                 {
                     text: (p) => `Трапец е вписан в окръжност. Оснoвите му са $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$, а бедрото е $${p.bc} \\text{ cm}$. Да се намерят височината и диагоналите на трапеца.`,
-                    params: [{ab: 20, cd: 4, bc: 10}, {ab: 24, cd: 10, bc: 25}, {ab: 18, cd: 2, bc: 17}]
+                    params: [{ab: 21, cd: 9, bc: 10}, {ab: 14, cd: 4, bc: 13}, {ab: 21, cd: 11, bc: 13}, {ab: 25, cd: 7, bc: 15}, {ab: 28, cd: 12, bc: 17}, {ab: 25, cd: 11, bc: 25}]
                 }
             ]
         };
