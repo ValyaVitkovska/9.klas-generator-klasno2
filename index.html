@@ -15,9 +15,10 @@
     <style>
         @media print {
             body { background-color: white; }
-            .page-break { page-break-before: always; }
             .no-print { display: none !important; }
             .variant-container { margin-bottom: 0; box-shadow: none; padding: 0; }
+            .variant-wrapper { page-break-after: always; }
+            .variant-wrapper:last-child { page-break-after: auto; }
         }
         .math-text { font-family: "Times New Roman", Times, serif; }
     </style>
@@ -258,9 +259,9 @@
                 const p7 = getRandomItem(t7.params);
 
                 const variantHTML = `
-                    <div class="${i < count ? 'mb-16' : ''}">
-                        <h1 class="text-center text-xl font-bold mb-2">Класна работа №2 - 9. клас 2025/2026 г.</h1>
-                        <h2 class="text-center text-lg font-semibold italic mb-8">Вариант ${i}</h2>
+                    <div class="variant-wrapper ${i < count ? 'mb-16 border-b-2 border-gray-200 pb-12 print:border-none print:pb-0 print:mb-0' : ''}">
+                        <div class="text-right text-[10px] text-gray-400 font-sans tracking-widest">KOD: 00${i}</div>
+                        <h1 class="text-center text-xl font-bold mb-8 mt-2">Класна работа №2 - 9. клас 2025/2026 г.</h1>
 
                         <div class="space-y-8">
                             <!-- Задача 1 -->
@@ -316,7 +317,6 @@
                             </div>
                         </div>
                     </div>
-                    ${i < count ? '<div class="page-break w-full h-[1px] bg-gray-300 my-16 no-print"></div>' : ''}
                 `;
 
                 container.insertAdjacentHTML('beforeend', variantHTML);
