@@ -263,8 +263,13 @@
             ]
         };
 
-        function getRandomItem(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
+        function getRandomItem(arr, excludeItem = null) {
+            if (arr.length <= 1) return arr[0];
+            let item;
+            do {
+                item = arr[Math.floor(Math.random() * arr.length)];
+            } while (item === excludeItem);
+            return item;
         }
 
         function generateAll() {
@@ -272,28 +277,32 @@
             container.innerHTML = '';
             const count = parseInt(document.getElementById('variantCount').value) || 3;
 
+            // Променливи за запазване на задачите от предходния генериран вариант
+            let prevT1 = null, prevT2 = null, prevT3A = null, prevT3B = null;
+            let prevT4 = null, prevT5 = null, prevT6 = null, prevT7 = null;
+
             for (let i = 1; i <= count; i++) {
                 
-                // Избор на случайни шаблони и параметри за всяка задача
-                const t1 = getRandomItem(tasksData.task1);
+                // Избор на случайни шаблони (с гаранция, че не се повтаря същият тип като в предния вариант)
+                const t1 = getRandomItem(tasksData.task1, prevT1); prevT1 = t1;
                 const p1 = getRandomItem(t1.params);
                 
-                const t2 = getRandomItem(tasksData.task2);
+                const t2 = getRandomItem(tasksData.task2, prevT2); prevT2 = t2;
                 const p2 = getRandomItem(t2.params);
 
-                const t3A = getRandomItem(ineqA);
-                const t3B = getRandomItem(ineqB);
+                const t3A = getRandomItem(ineqA, prevT3A); prevT3A = t3A;
+                const t3B = getRandomItem(ineqB, prevT3B); prevT3B = t3B;
 
-                const t4 = getRandomItem(tasksData.task4);
+                const t4 = getRandomItem(tasksData.task4, prevT4); prevT4 = t4;
                 const p4 = getRandomItem(t4.params);
 
-                const t5 = getRandomItem(tasksData.task5);
+                const t5 = getRandomItem(tasksData.task5, prevT5); prevT5 = t5;
                 const p5 = getRandomItem(t5.params);
 
-                const t6 = getRandomItem(tasksData.task6);
+                const t6 = getRandomItem(tasksData.task6, prevT6); prevT6 = t6;
                 const p6 = getRandomItem(t6.params);
 
-                const t7 = getRandomItem(tasksData.task7);
+                const t7 = getRandomItem(tasksData.task7, prevT7); prevT7 = t7;
                 const p7 = getRandomItem(t7.params);
 
                 // Изграждане на HTML-а за конкретния вариант
@@ -390,379 +399,6 @@
                                 <p><span class="font-semibold">Задача 5:</span> ${p5.ans}</p>
                                 <p><span class="font-semibold">Задача 6:</span> ${p6.ans}</p>
                                 <p><span class="font-semibold">Задача 7:</span> ${p7.ans}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                container.insertAdjacentHTML('beforeend', variantHTML);
-            }
-
-            // Рендиране на математическите формули чрез MathJax
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise();
-            }
-        }
-
-        // Генериране при първоначално зареждане
-        window.onload = generateAll;
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="bg">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Класна работа №2 - Генератор</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-            svg: { fontCache: 'global' }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <style>
-        @media print {
-            body { background-color: white; }
-            .no-print { display: none !important; }
-            .variant-container { margin-bottom: 0; box-shadow: none; padding: 0; }
-            /* Гарантира, че всеки вариант отива на нова страница */
-            .variant-wrapper { page-break-after: always; }
-            /* Предотвратява празна страница на самия край на документа */
-            .variant-wrapper:last-child { page-break-after: auto; }
-        }
-        .math-text { font-family: "Times New Roman", Times, serif; }
-    </style>
-</head>
-<body class="bg-gray-100 text-gray-900 font-serif antialiased p-4 md:p-8">
-
-    <!-- Контролен панел (скрит при принтиране) -->
-    <div class="max-w-5xl mx-auto bg-white shadow-lg p-6 mb-8 rounded-lg no-print border-l-4 border-blue-500">
-        <h2 class="text-2xl font-bold mb-2 text-blue-700 font-sans">Генератор на класни работи</h2>
-        <p class="mb-6 text-gray-600 font-sans">При всяко натискане на бутона се генерират напълно нови варианти чрез произволно комбиниране на шаблони и коректни математически стойности.</p>
-        
-        <div class="flex flex-wrap items-center gap-4 font-sans">
-            <label for="variantCount" class="font-semibold text-gray-800">Брой варианти:</label>
-            <input type="number" id="variantCount" value="3" min="1" max="10" class="border border-gray-300 rounded p-2 w-20 text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <button onclick="generateAll()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow transition font-bold cursor-pointer">Генерирай нови задачи</button>
-            <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow transition font-bold cursor-pointer flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg>
-                Принтирай
-            </button>
-        </div>
-    </div>
-
-    <!-- Контейнер за генерираните варианти -->
-    <div id="variantsContainer" class="max-w-5xl mx-auto bg-white shadow-lg p-8 md:p-12 relative variant-container">
-        <!-- Вариантите се инжектират тук чрез JS -->
-    </div>
-
-    <script>
-        // БАЗА ДАННИ СЪС ЗАДАЧИ И КОРЕКТНИ ПАРАМЕТРИ
-        const svgs = {
-            rhombus: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="30,130 130,130 80,43.4" fill="none" stroke="black" stroke-width="1.5"/><polygon points="30,130 80,130 105,86.7 55,86.7" fill="none" stroke="black" stroke-width="1.5"/><text x="15" y="140" font-family="serif" font-style="italic">A</text><text x="135" y="140" font-family="serif" font-style="italic">B</text><text x="75" y="35" font-family="serif" font-style="italic">C</text><text x="75" y="145" font-family="serif" font-style="italic">M</text><text x="110" y="85" font-family="serif" font-style="italic">N</text><text x="40" y="85" font-family="serif" font-style="italic">P</text></svg>`,
-            rhombusB: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="30,130 160,130 104,34" fill="none" stroke="black" stroke-width="1.5"/><polygon points="160,130 130,78 70,78 100,130" fill="none" stroke="black" stroke-width="1.5"/><text x="15" y="140" font-family="serif" font-style="italic">A</text><text x="165" y="140" font-family="serif" font-style="italic">B</text><text x="100" y="25" font-family="serif" font-style="italic">C</text><text x="55" y="75" font-family="serif" font-style="italic">M</text><text x="135" y="75" font-family="serif" font-style="italic">N</text><text x="95" y="145" font-family="serif" font-style="italic">P</text></svg>`,
-            triangleD: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="30,130 170,130 70,40" fill="none" stroke="black" stroke-width="1.5"/><line x1="70" y1="40" x2="80" y2="130" stroke="black" stroke-width="1.5"/><text x="15" y="140" font-family="serif" font-style="italic">A</text><text x="175" y="140" font-family="serif" font-style="italic">B</text><text x="65" y="30" font-family="serif" font-style="italic">C</text><text x="75" y="145" font-family="serif" font-style="italic">D</text><path d="M 155 130 A 20 20 0 0 1 161 118" fill="none" stroke="black"/><path d="M 64 55 A 20 20 0 0 0 76 55" fill="none" stroke="black"/></svg>`,
-            triangleED: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]">
-                <polygon points="20,130 180,130 110,20" fill="none" stroke="black" stroke-width="1.5"/>
-                <line x1="65" y1="75" x2="152" y2="86" stroke="black" stroke-width="1.5"/>
-                <text x="5" y="140" font-family="serif" font-style="italic">A</text>
-                <text x="185" y="140" font-family="serif" font-style="italic">B</text>
-                <text x="105" y="15" font-family="serif" font-style="italic">C</text>
-                <text x="45" y="75" font-family="serif" font-style="italic">E</text>
-                <text x="160" y="90" font-family="serif" font-style="italic">D</text>
-                <path d="M 40 130 A 20 20 0 0 0 32.6 114.6" fill="none" stroke="black"/>
-                <path d="M 141.2 69.2 A 20 20 0 0 0 132.2 83.6" fill="none" stroke="black"/>
-            </svg>`,
-            trianglePMN: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]">
-                <polygon points="20,130 180,130 130,20" fill="none" stroke="black" stroke-width="1.5"/>
-                <line x1="86" y1="64" x2="160" y2="86" stroke="black" stroke-width="1.5"/>
-                <text x="5" y="140" font-family="serif" font-style="italic">M</text>
-                <text x="185" y="140" font-family="serif" font-style="italic">N</text>
-                <text x="125" y="15" font-family="serif" font-style="italic">P</text>
-                <text x="70" y="60" font-family="serif" font-style="italic">E</text>
-                <text x="165" y="80" font-family="serif" font-style="italic">F</text>
-                <path d="M 40 130 A 20 20 0 0 0 34.1 115.9" fill="none" stroke="black"/>
-                <path d="M 151.8 67.8 A 20 20 0 0 0 140.8 80.4" fill="none" stroke="black"/>
-            </svg>`,
-            trapezoidDiag: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="30,130 170,130 120,60 70,60" fill="none" stroke="black" stroke-width="1.5"/><line x1="30" y1="130" x2="120" y2="60" stroke="black" stroke-width="1.5"/><line x1="170" y1="130" x2="70" y2="60" stroke="black" stroke-width="1.5"/><text x="15" y="140" font-family="serif" font-style="italic">A</text><text x="175" y="140" font-family="serif" font-style="italic">B</text><text x="125" y="50" font-family="serif" font-style="italic">C</text><text x="55" y="50" font-family="serif" font-style="italic">D</text><text x="95" y="112" font-family="serif" font-style="italic">O</text></svg>`,
-            trapezoidExt: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="30,130 150,130 90,10" fill="none" stroke="black" stroke-width="1.5"/><line x1="70" y1="50" x2="110" y2="50" stroke="black" stroke-width="1.5"/><text x="15" y="140" font-family="serif" font-style="italic">A</text><text x="155" y="140" font-family="serif" font-style="italic">B</text><text x="115" y="45" font-family="serif" font-style="italic">C</text><text x="55" y="45" font-family="serif" font-style="italic">D</text><text x="85" y="10" font-family="serif" font-style="italic">E</text></svg>`,
-            trapezoidMid: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="30,130 170,130 90,10" fill="none" stroke="black" stroke-width="1.5"/><line x1="60" y1="70" x2="130" y2="70" stroke="black" stroke-width="1.5"/><text x="15" y="140" font-family="serif" font-style="italic">A</text><text x="175" y="140" font-family="serif" font-style="italic">B</text><text x="85" y="10" font-family="serif" font-style="italic">C</text><text x="45" y="70" font-family="serif" font-style="italic">M</text><text x="140" y="70" font-family="serif" font-style="italic">N</text></svg>`,
-            rightTriangleH: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="20,130 180,130 77.6,53.2" fill="none" stroke="black" stroke-width="1.5"/><line x1="77.6" y1="53.2" x2="77.6" y2="130" stroke="black" stroke-width="1.5" stroke-dasharray="4"/><rect x="77.6" y="125" width="5" height="5" fill="none" stroke="black"/><text x="5" y="140" font-family="serif" font-style="italic">A</text><text x="185" y="140" font-family="serif" font-style="italic">B</text><text x="75" y="45" font-family="serif" font-style="italic">C</text><text x="75" y="145" font-family="serif" font-style="italic">H</text></svg>`,
-            rightTriangleM: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="30,130 170,130 30,30" fill="none" stroke="black" stroke-width="1.5"/><line x1="30" y1="30" x2="100" y2="130" stroke="black" stroke-width="1.5"/><rect x="30" y="125" width="5" height="5" fill="none" stroke="black"/><text x="15" y="140" font-family="serif" font-style="italic">C</text><text x="175" y="140" font-family="serif" font-style="italic">B</text><text x="15" y="30" font-family="serif" font-style="italic">A</text><text x="97" y="145" font-family="serif" font-style="italic">M</text></svg>`,
-            rightTriangleL: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="30,130 170,130 30,30" fill="none" stroke="black" stroke-width="1.5"/><line x1="30" y1="30" x2="85" y2="130" stroke="black" stroke-width="1.5"/><rect x="30" y="125" width="5" height="5" fill="none" stroke="black"/><text x="15" y="140" font-family="serif" font-style="italic">C</text><text x="175" y="140" font-family="serif" font-style="italic">B</text><text x="15" y="30" font-family="serif" font-style="italic">A</text><text x="82" y="145" font-family="serif" font-style="italic">L</text><path d="M 30 50 A 20 20 0 0 0 41 46" fill="none" stroke="black"/><path d="M 30 60 A 30 30 0 0 0 46 53" fill="none" stroke="black"/></svg>`,
-            isoTriangle: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><circle cx="100" cy="80" r="60" fill="none" stroke="black" stroke-width="1.5"/><polygon points="52,116 148,116 100,20" fill="none" stroke="black" stroke-width="1.5"/><circle cx="100" cy="80" r="1.5" fill="black"/><text x="35" y="125" font-family="serif" font-style="italic">A</text><text x="155" y="125" font-family="serif" font-style="italic">B</text><text x="95" y="15" font-family="serif" font-style="italic">C</text><text x="105" y="85" font-family="serif" font-style="italic">O</text></svg>`,
-            isoTriangleIn: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="20,130 180,130 100,20" fill="none" stroke="black" stroke-width="1.5"/><circle cx="100" cy="89.3" r="40.7" fill="none" stroke="black" stroke-width="1.5"/><circle cx="100" cy="89.3" r="1.5" fill="black"/><text x="5" y="140" font-family="serif" font-style="italic">A</text><text x="185" y="140" font-family="serif" font-style="italic">B</text><text x="95" y="15" font-family="serif" font-style="italic">C</text><text x="105" y="93" font-family="serif" font-style="italic">O</text></svg>`,
-            isoTriangleH: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="40,130 160,130 100,20" fill="none" stroke="black" stroke-width="1.5"/><line x1="100" y1="20" x2="100" y2="130" stroke="black" stroke-width="1.5" stroke-dasharray="4"/><rect x="100" y="125" width="5" height="5" fill="none" stroke="black"/><text x="25" y="140" font-family="serif" font-style="italic">A</text><text x="165" y="140" font-family="serif" font-style="italic">B</text><text x="95" y="15" font-family="serif" font-style="italic">C</text><text x="105" y="145" font-family="serif" font-style="italic">H</text></svg>`,
-            isoTriangleMedNoCircle: `<svg viewBox="0 0 200 150" class="w-full max-w-[180px]"><polygon points="40,130 160,130 100,20" fill="none" stroke="black" stroke-width="1.5"/><line x1="100" y1="20" x2="100" y2="130" stroke="black" stroke-width="1.5" stroke-dasharray="4"/><line x1="40" y1="130" x2="130" y2="75" stroke="black" stroke-width="1.5"/><rect x="100" y="125" width="5" height="5" fill="none" stroke="black"/><text x="25" y="140" font-family="serif" font-style="italic">A</text><text x="165" y="140" font-family="serif" font-style="italic">B</text><text x="95" y="15" font-family="serif" font-style="italic">C</text><text x="105" y="145" font-family="serif" font-style="italic">H</text><text x="140" y="75" font-family="serif" font-style="italic">M</text></svg>`
-        };
-
-        const ineqA = [
-            `$(-x^2 - 1)(x^2 - 2x - 15)(x^2 + 3x) < 0$`,
-            `$(x^2 + 4)(x^2 - 5x + 6)(x^2 - 4) \\ge 0$`,
-            `$(-3x^2 - 2)(x^2 + x - 2)(x^2 - x) > 0$`,
-            `$(2x^2 + 1)(x^2 - x - 12)(x^2 - 16) \\le 0$`,
-            `$(-x^2 - 5)(x^2 + 4x + 3)(x^2 + 3x) \\ge 0$`,
-            `$(x^2 + x + 1)(x^2 - 7x + 10)(x^2 - 2x) < 0$`,
-            `$(-x^2 - 3x - 5)(x^2 + 2x - 8)(x^2 - 4) \\ge 0$`,
-            `$(x^2 + 2)(x^2 - 6x + 5)(x^2 - 1) \\le 0$`,
-            `$(-2x^2 - 7)(x^2 - 3x - 10)(x^2 + 2x) > 0$`,
-            `$(x^2 + 6)(x^2 + 5x + 6)(x^2 - 9) \\le 0$`
-        ];
-
-        const ineqB = [
-            `$\\dfrac{5}{x^2-4x+3} \\le \\dfrac{1}{x-1} + \\dfrac{2}{3-x}$`,
-            `$\\dfrac{x^2}{x+3} - \\dfrac{x}{x-1} \\le \\dfrac{4}{3-2x-x^2}$`,
-            `$\\dfrac{3}{2-x-x^2} \\ge \\dfrac{1}{x+2} + \\dfrac{2}{x-1}$`,
-            `$\\dfrac{2x}{x-2} - \\dfrac{x}{x+2} \\ge \\dfrac{4}{4-x^2}$`,
-            `$\\dfrac{x}{x-3} + \\dfrac{2x}{x+3} \\le \\dfrac{18}{9-x^2}$`,
-            `$\\dfrac{x}{x-1} \\ge \\dfrac{5}{1-x^2} + \\dfrac{1}{x+1}$`,
-            `$\\dfrac{x^2+1}{x-2} + \\dfrac{x-1}{x+2} \\le \\dfrac{8}{4-x^2}$`,
-            `$\\dfrac{3x}{x+1} - \\dfrac{2}{1-x} \\ge \\dfrac{5x}{x^2-1}$`,
-            `$\\dfrac{1}{x} + \\dfrac{x}{x-2} \\le \\dfrac{2}{2x-x^2}$`,
-            `$\\dfrac{x+3}{x-1} + \\dfrac{x-3}{x+1} \\le \\dfrac{4}{1-x^2}$`
-        ];
-
-        const tasksData = {
-            task1: [
-                {
-                    text: (p) => `В триъгълник $ABC$ е вписан ромб $AMNP$, така че точките $M, N$ и $P$ лежат съответно върху страните $AB, BC$ и $AC$. Ако $AB = ${p.ab} \\text{ cm}$ и $AC = ${p.ac} \\text{ cm}$, намерете дължината на страната на ромба.`,
-                    params: [{ab: 15, ac: 10}, {ab: 12, ac: 24}, {ab: 20, ac: 30}, {ab: 18, ac: 9}, {ab: 14, ac: 35}, {ab: 30, ac: 15}, {ab: 24, ac: 12}, {ab: 40, ac: 10}],
-                    svg: svgs.rhombus
-                },
-                {
-                    text: (p) => `В триъгълник $ABC$ е вписан ромбът $BNMP$, така че точките $N, M$ и $P$ лежат съответно върху страните $BC, AC$ и $AB$. Ако $AB = ${p.ab} \\text{ cm}$ и $BC = ${p.bc} \\text{ cm}$, намерете периметъра на ромба $BNMP$.`,
-                    params: [{ab: 24, bc: 18}, {ab: 15, bc: 10}, {ab: 12, bc: 24}, {ab: 20, bc: 30}, {ab: 14, bc: 35}, {ab: 21, bc: 28}, {ab: 40, bc: 24}],
-                    svg: svgs.rhombusB
-                },
-                {
-                    text: (p) => `Върху страната $AB$ на $\\Delta ABC$ е взета точка $D$ така, че $\\angle ACD = \\angle ABC$. Ако $AD = ${p.ad} \\text{ cm}$ и $AC = ${p.ac} \\text{ cm}$, да се намери дължината на отсечката $AB$.`,
-                    params: [{ad: 4, ac: 6}, {ad: 9, ac: 12}, {ad: 5, ac: 10}, {ad: 4, ac: 8}, {ad: 9, ac: 15}, {ad: 7, ac: 14}],
-                    svg: svgs.triangleD
-                },
-                {
-                    text: (p) => `На страните $AC$ и $BC$ на $\\Delta ABC$ са избрани точки $E$ и $D$ така, че $\\angle EDC = \\angle BAC$. Ако $CE = ${p.ce} \\text{ cm}$, $CD = ${p.cd} \\text{ cm}$ и $AE = ${p.ae} \\text{ cm}$, намерете дължината на отсечката $DB$.`,
-                    params: [{ce: 2, cd: 4, ae: 8}, {ce: 4, cd: 6, ae: 14}, {ce: 3, cd: 5, ae: 12}, {ce: 5, cd: 10, ae: 15}, {ce: 6, cd: 8, ae: 10}],
-                    svg: svgs.triangleED
-                },
-                {
-                    text: (p) => `На страните $AC$ и $BC$ на $\\Delta ABC$ са избрани точки $E$ и $D$ така, че $\\angle EDC = \\angle BAC$. Ако $CD = ${p.cd} \\text{ cm}$, $AE = ${p.ae} \\text{ cm}$ и $CE = DB = x$, намерете стойността на $x$.`,
-                    params: [{cd: '5', ae: '12{,}5'}, {cd: '6', ae: '11'}, {cd: '8', ae: '20'}, {cd: '4', ae: '10'}, {cd: '12', ae: '22'}],
-                    svg: svgs.triangleED
-                },
-                {
-                    text: (p) => `На чертежа $\\angle PMN = \\angle EFP$, $ME = ${p.me} \\text{ cm}$, $EP = ${p.ep} \\text{ cm}$ и $PF = ${p.pf} \\text{ cm}$. Да се намери отношението $EF : MN$.`,
-                    params: [{me: 12, ep: 3, pf: 6}, {me: 8, ep: 2, pf: 4}, {me: 16, ep: 4, pf: 5}, {me: 15, ep: 5, pf: 8}, {me: 10, ep: 4, pf: 7}, {me: 20, ep: 4, pf: 8}, {me: 14, ep: 4, pf: 6}, {me: 9, ep: 3, pf: 4}, {me: 21, ep: 4, pf: 10}],
-                    svg: svgs.trianglePMN
-                }
-            ],
-            task2: [
-                {
-                    text: (p) => `Диагоналите на трапеца $ABCD$ ($AB \\parallel CD$) се пресичат в точка $O$. Ако лицето на $\\Delta ABO$ e $${p.s1} \\text{ cm}^2$, а лицето на $\\Delta CDO$ e $${p.s2} \\text{ cm}^2$ и $AO = ${p.ao} \\text{ cm}$, да се намери дължината на диагонала $AC$.`,
-                    params: [{s1: 25, s2: 4, ao: 5}, {s1: 36, s2: 9, ao: 6}, {s1: 16, s2: 4, ao: 4}, {s1: 49, s2: 9, ao: 7}, {s1: 64, s2: 16, ao: 8}],
-                    svg: svgs.trapezoidDiag
-                },
-                {
-                    text: (p) => `Продълженията на бедрата $AD$ и $BC$ на трапец $ABCD$ се пресичат в точка $E$. Дадено е, че $CD = ${p.cd} \\text{ cm}$ и $AB = ${p.ab} \\text{ cm}$. Ако лицето на $\\Delta CDE$ е $${p.s} \\text{ cm}^2$, намерете лицето на трапеца $ABCD$.`,
-                    params: [{ab: 15, cd: 5, s: 10}, {ab: 12, cd: 4, s: 8}, {ab: 20, cd: 5, s: 12}, {ab: 10, cd: 2, s: 5}, {ab: 18, cd: 6, s: 9}],
-                    svg: svgs.trapezoidExt
-                },
-                {
-                    text: (p) => `Права, успоредна на $AB$, пресича страните $AC$ и $BC$ на $\\Delta ABC$ съответно в точките $M$ и $N$. Ако лицето на $\\Delta MNC$ е $${p.s1} \\text{ cm}^2$, лицето на трапеца $ABNM$ е $${p.s2} \\text{ cm}^2$ и $AB = ${p.ab} \\text{ cm}$, да се намери дължината на $MN$.`,
-                    params: [{s1: 4, s2: 21, ab: 10}, {s1: 9, s2: 16, ab: 15}, {s1: 4, s2: 32, ab: 18}, {s1: 16, s2: 9, ab: 20}, {s1: 25, s2: 24, ab: 14}],
-                    svg: svgs.trapezoidMid
-                }
-            ],
-            task4: [
-                {
-                    text: (p) => `Проекциите на катетите върху хипотенузата в правоъгълен триъгълник са $${p.p1} \\text{ cm}$ и $${p.p2} \\text{ cm}$. Да се намерят височината към хипотенузата и катетите на триъгълника.`,
-                    params: [{p1: 2, p2: 8}, {p1: 9, p2: 16}, {p1: 1.8, p2: 3.2}, {p1: 4, p2: 9}, {p1: 18, p2: 32}, {p1: 3.6, p2: 6.4}],
-                    svg: svgs.rightTriangleH
-                },
-                {
-                    text: (p) => `Единият катет на правоъгълен триъгълник е $${p.a} \\text{ cm}$, а проекцията му върху хипотенузата е $${p.p} \\text{ cm}$. Да се намерят хипотенузата и другият катет.`,
-                    params: [{a: 8, p: 6.4}, {a: 6, p: 3.6}, {a: 15, p: 9}, {a: 20, p: 16}, {a: 10, p: 8}, {a: 12, p: 7.2}],
-                    svg: svgs.rightTriangleH
-                },
-                {
-                    text: (p) => `Даден е правоъгълен триъгълник с хипотенуза $${p.c} \\text{ cm}$ и височина към нея $${p.h} \\text{ cm}$. Да се намерят проекциите на катетите върху хипотенузата.`,
-                    params: [{c: 10, h: 4}, {c: 25, h: 12}, {c: 13, h: 6}, {c: 5, h: 2.4}],
-                    svg: svgs.rightTriangleH
-                }
-            ],
-            task5: [
-                {
-                    text: (p) => `В правоъгълния $\\Delta ABC$ ($\\angle C = 90^\\circ$) ъглополовящата $AL$ ($L \\in BC$) дели катета $BC$ на отсечки $CL = ${p.cl} \\text{ cm}$ и $BL = ${p.bl} \\text{ cm}$. Да се намери дължината на хипотенузата и на ъглополовящата $AL$.`,
-                    params: [{cl: 3, bl: 5}, {cl: 6, bl: 10}, {cl: 9, bl: 15}, {cl: 12, bl: 20}, {cl: 15, bl: 25}],
-                    svg: svgs.rightTriangleL
-                },
-                {
-                    text: (p) => `Даден е правоъгълен $\\Delta ABC$ ($\\angle C = 90^\\circ$). Катетите му са $AC = ${p.ac} \\text{ cm}$ и $BC = ${p.bc} \\text{ cm}$. Да се намери дължината на медианата $AM$ към катета $BC$.`,
-                    params: [{ac: 12, bc: 10}, {ac: 8, bc: 12}, {ac: 6, bc: 16}, {ac: 15, bc: 16}, {ac: 9, bc: 24}],
-                    svg: svgs.rightTriangleM
-                },
-                {
-                    text: (p) => `В правоъгълен $\\Delta ABC$ ($\\angle C = 90^\\circ$) катетите са $AC = ${p.ac} \\text{ cm}$ и $BC = ${p.bc} \\text{ cm}$. Да се намери дължината на медианата към хипотенузата.`,
-                    params: [{ac: 6, bc: 8}, {ac: 9, bc: 12}, {ac: 15, bc: 20}, {ac: 5, bc: 12}, {ac: 10, bc: 24}],
-                    svg: svgs.rightTriangleM
-                }
-            ],
-            task6: [
-                {
-                    text: (p) => `В равнобедрен $\\Delta ABC$ основата е $AB = ${p.c} \\text{ cm}$, а бедрото е $AC = BC = ${p.a} \\text{ cm}$. Да се намери радиусът $R$ на описаната около триъгълника окръжност.`,
-                    params: [{c: 12, a: 10}, {c: 16, a: 17}, {c: 24, a: 15}, {c: 10, a: 13}, {c: 24, a: 13}, {c: 30, a: 25}],
-                    svg: svgs.isoTriangle
-                },
-                {
-                    text: (p) => `В равнобедрен $\\Delta ABC$ основата е $AB = ${p.c} \\text{ cm}$, а бедрото е $AC = BC = ${p.a} \\text{ cm}$. Да се намери радиусът $r$ на вписаната в триъгълника окръжност.`,
-                    params: [{c: 12, a: 10}, {c: 16, a: 17}, {c: 24, a: 15}, {c: 10, a: 13}, {c: 30, a: 25}],
-                    svg: svgs.isoTriangleIn
-                },
-                {
-                    text: (p) => `В равнобедрен $\\Delta ABC$ основата е $AB = ${p.c} \\text{ cm}$, а височината към нея е $h_c = ${p.h} \\text{ cm}$. Да се намери радиусът $R$ на описаната около триъгълника окръжност.`,
-                    params: [{c: 12, h: 8}, {c: 16, h: 15}, {c: 24, h: 9}, {c: 10, h: 12}, {c: 30, h: 20}],
-                    svg: svgs.isoTriangleH
-                },
-                {
-                    text: (p) => `В равнобедрен $\\Delta ABC$ височината към основата $AB$ е $h_c = ${p.h} \\text{ cm}$, а медианата към бедрото $BC$ е $AM = ${p.m} \\text{ cm}$. Намерете дължината на основата $AB$.`,
-                    params: [{h: 18, m: 15}, {h: 24, m: 15}, {h: 12, m: '7{,}5'}, {h: 36, m: 30}, {h: 30, m: 39}, {h: 15, m: '19{,}5'}],
-                    svg: svgs.isoTriangleMedNoCircle
-                }
-            ],
-            task7: [
-                {
-                    text: (p) => `Около окръжност с радиус $r = ${p.r} \\text{ cm}$ е описан равнобедрен трапец с бедро $${p.a} \\text{ cm}$. Да се намерят основите и лицето на трапеца.`,
-                    params: [{r: 6, a: 13}, {r: 4, a: 17}, {r: 4.5, a: 15}, {r: 10, a: 25}, {r: 12, a: 25}]
-                },
-                {
-                    text: (p) => `Около окръжност е описан правоъгълен трапец с основи $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$. Да се намерят бедрата на трапеца и радиуса на окръжността.`,
-                    params: [{ab: 6, cd: 3}, {ab: 15, cd: 10}, {ab: 20, cd: 12}, {ab: 28, cd: 21}]
-                },
-                {
-                    text: (p) => `Трапец е вписан в окръжност. Основите му са $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$, а височината му е $${p.h} \\text{ cm}$. Да се намерят бедрото и диагоналът на трапеца.`,
-                    params: [{ab: 21, cd: 9, h: 8}, {ab: 14, cd: 4, h: 12}, {ab: 21, cd: 11, h: 12}, {ab: 25, cd: 7, h: 12}, {ab: 28, cd: 12, h: 15}, {ab: 25, cd: 11, h: 24}]
-                },
-                {
-                    text: (p) => `Трапец е вписан в окръжност. Оснoвите му са $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$, а бедрото е $${p.bc} \\text{ cm}$. Да се намерят височината и диагоналите на трапеца.`,
-                    params: [{ab: 21, cd: 9, bc: 10}, {ab: 14, cd: 4, bc: 13}, {ab: 21, cd: 11, bc: 13}, {ab: 25, cd: 7, bc: 15}, {ab: 28, cd: 12, bc: 17}, {ab: 25, cd: 11, bc: 25}]
-                }
-            ]
-        };
-
-        function getRandomItem(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
-
-        function generateAll() {
-            const container = document.getElementById('variantsContainer');
-            container.innerHTML = '';
-            const count = parseInt(document.getElementById('variantCount').value) || 3;
-
-            for (let i = 1; i <= count; i++) {
-                
-                // Избор на случайни шаблони и параметри за всяка задача
-                const t1 = getRandomItem(tasksData.task1);
-                const p1 = getRandomItem(t1.params);
-                
-                const t2 = getRandomItem(tasksData.task2);
-                const p2 = getRandomItem(t2.params);
-
-                const t3A = getRandomItem(ineqA);
-                const t3B = getRandomItem(ineqB);
-
-                const t4 = getRandomItem(tasksData.task4);
-                const p4 = getRandomItem(t4.params);
-
-                const t5 = getRandomItem(tasksData.task5);
-                const p5 = getRandomItem(t5.params);
-
-                const t6 = getRandomItem(tasksData.task6);
-                const p6 = getRandomItem(t6.params);
-
-                const t7 = getRandomItem(tasksData.task7);
-                const p7 = getRandomItem(t7.params);
-
-                // Изграждане на HTML-а за конкретния вариант
-                const variantHTML = `
-                    <div class="variant-wrapper ${i < count ? 'mb-16 border-b-2 border-gray-200 pb-12 print:border-none print:pb-0 print:mb-0' : ''}">
-                        <div class="relative">
-                            <div class="absolute right-0 top-0 text-[10px] text-gray-400 font-sans tracking-widest">KOD: 00${i}</div>
-                            <h2 class="text-center text-lg font-bold uppercase tracking-wider text-gray-700">ЧЕГ „Проф. Иван Апостолов“</h2>
-                            <h1 class="text-center text-xl font-bold mb-6 mt-1">Класна работа №2 - 9. клас 2025/2026 г.</h1>
-                        </div>
-
-                        <!-- Полета за попълване от ученика -->
-                        <div class="flex flex-wrap items-end gap-6 mb-10 text-base md:text-lg font-sans">
-                            <div class="flex flex-1 items-end min-w-[200px]">
-                                <span class="mr-2 whitespace-nowrap">Име:</span>
-                                <div class="flex-1 border-b-[1.5px] border-gray-500 border-dotted mb-1"></div>
-                            </div>
-                            <div class="flex items-end w-24">
-                                <span class="mr-2 whitespace-nowrap">Клас:</span>
-                                <div class="flex-1 border-b-[1.5px] border-gray-500 border-dotted mb-1"></div>
-                            </div>
-                            <div class="flex items-end w-32">
-                                <span class="mr-2 whitespace-nowrap">Точки:</span>
-                                <div class="flex-1 border-b-[1.5px] border-gray-500 border-dotted mb-1"></div>
-                            </div>
-                            <div class="flex items-end w-36">
-                                <span class="mr-2 whitespace-nowrap">Оценка:</span>
-                                <div class="flex-1 border-b-[1.5px] border-gray-500 border-dotted mb-1"></div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-8">
-                            <!-- Задача 1 -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
-                                <div class="col-span-3">
-                                    <p><span class="font-bold">1.</span> (4 т.) ${t1.text(p1)}</p>
-                                </div>
-                                <div class="col-span-1 flex justify-center">${t1.svg}</div>
-                            </div>
-
-                            <!-- Задача 2 -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
-                                <div class="col-span-3">
-                                    <p><span class="font-bold">2.</span> (4 т.) ${t2.text(p2)}</p>
-                                </div>
-                                <div class="col-span-1 flex justify-center">${t2.svg}</div>
-                            </div>
-
-                            <!-- Задача 3 -->
-                            <div>
-                                <p><span class="font-bold">3.</span> Да се решат неравенствата:</p>
-                                <p class="ml-4 mt-2">А) (4 т.) ${t3A}</p>
-                                <p class="ml-4 mt-4">Б) (5 т.) ${t3B}</p>
-                            </div>
-
-                            <!-- Задача 4 -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
-                                <div class="col-span-3">
-                                    <p><span class="font-bold">4.</span> (4 т.) ${t4.text(p4)}</p>
-                                </div>
-                                <div class="col-span-1 flex justify-center">${t4.svg}</div>
-                            </div>
-
-                            <!-- Задача 5 -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
-                                <div class="col-span-3">
-                                    <p><span class="font-bold">5.</span> (5 т.) ${t5.text(p5)}</p>
-                                </div>
-                                <div class="col-span-1 flex justify-center">${t5.svg}</div>
-                            </div>
-
-                            <!-- Задача 6 -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
-                                <div class="col-span-3">
-                                    <p><span class="font-bold">6.</span> (7 т.) ${t6.text(p6)}</p>
-                                </div>
-                                <div class="col-span-1 flex justify-center">${t6.svg}</div>
-                            </div>
-
-                            <!-- Задача 7 -->
-                            <div>
-                                <p><span class="font-bold">7.</span> (7 т.) ${t7.text(p7)}</p>
                             </div>
                         </div>
                     </div>
