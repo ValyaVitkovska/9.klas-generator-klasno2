@@ -211,6 +211,11 @@
                     svg: svgs.rightTriangleL
                 },
                 {
+                    text: (p) => `В правоъгълен $\\Delta ABC$ ($\\angle C = 90^\\circ$) катетите са $AC = ${p.ac} \\text{ cm}$ и $BC = ${p.bc} \\text{ cm}$. Да се намери дължината на ъглополовящата $AL$ ($L \\in BC$).`,
+                    params: [{ac: 6, bc: 8, ans: '$3\\sqrt{5}$'}, {ac: 12, bc: 16, ans: '$6\\sqrt{5}$'}, {ac: 18, bc: 24, ans: '$9\\sqrt{5}$'}, {ac: 15, bc: 20, ans: '$\\frac{15\\sqrt{5}}{2}$'}, {ac: 9, bc: 12, ans: '$\\frac{9\\sqrt{5}}{2}$'}],
+                    svg: svgs.rightTriangleL
+                },
+                {
                     text: (p) => `Даден е правоъгълен $\\Delta ABC$ ($\\angle C = 90^\\circ$). Катетите му са $AC = ${p.ac} \\text{ cm}$ и $BC = ${p.bc} \\text{ cm}$. Да се намери дължината на медианата $AM$ към катета $BC$.`,
                     params: [{ac: 12, bc: 10, ans: '13'}, {ac: 8, bc: 12, ans: '10'}, {ac: 6, bc: 16, ans: '10'}, {ac: 15, bc: 16, ans: '17'}, {ac: 9, bc: 24, ans: '15'}],
                     svg: svgs.rightTriangleM
@@ -228,6 +233,11 @@
                     svg: svgs.isoTriangle
                 },
                 {
+                    text: (p) => `В равнобедрен $\\Delta ABC$ основата е $AB = ${p.c} \\text{ cm}$, а бедрото е $AC = BC = ${p.a} \\text{ cm}$. Да се намери дължината на медианата $AM$ към бедрото $BC$.`,
+                    params: [{c: 8, a: 14, ans: '9'}, {c: 12, a: 34, ans: '19'}, {c: 12, a: 10, ans: '$\\sqrt{97}$'}, {c: 16, a: 10, ans: '$3\\sqrt{17}$'}, {c: 24, a: 15, ans: '$\\frac{9\\sqrt{17}}{2}$'}],
+                    svg: svgs.isoTriangleMedNoCircle
+                },
+                {
                     text: (p) => `В равнобедрен $\\Delta ABC$ основата е $AB = ${p.c} \\text{ cm}$, а бедрото е $AC = BC = ${p.a} \\text{ cm}$. Да се намери радиусът $r$ на вписаната в триъгълника окръжност.`,
                     params: [{c: 12, a: 10, ans: '3'}, {c: 16, a: 17, ans: '4{,}8'}, {c: 24, a: 15, ans: '4'}, {c: 10, a: 13, ans: '$\\frac{10}{3}$'}, {c: 30, a: 25, ans: '7{,}5'}],
                     svg: svgs.isoTriangleIn
@@ -236,6 +246,11 @@
                     text: (p) => `В равнобедрен $\\Delta ABC$ основата е $AB = ${p.c} \\text{ cm}$, а височината към нея е $h_c = ${p.h} \\text{ cm}$. Да се намери радиусът $R$ на описаната около триъгълника окръжност.`,
                     params: [{c: 12, h: 8, ans: '$6{,}25$'}, {c: 16, h: 15, ans: '$\\frac{289}{30}$'}, {c: 24, h: 9, ans: '$12{,}5$'}, {c: 10, h: 12, ans: '$\\frac{169}{24}$'}, {c: 30, h: 20, ans: '$\\frac{625}{40}$'}],
                     svg: svgs.isoTriangleH
+                },
+                {
+                    text: (p) => `В равнобедрен $\\Delta ABC$ височината към основата $AB$ е $h_c = ${p.h} \\text{ cm}$, а радиусът на вписаната окръжност е $r = ${p.r} \\text{ cm}$. Да се намерят дължините на бедрото и основата на триъгълника.`,
+                    params: [{h: 8, r: 3, ans: '$AC=10; AB=12$'}, {h: 12, r: '\\frac{10}{3}', ans: '$AC=13; AB=10$'}, {h: 15, r: '4{,}8', ans: '$AC=17; AB=16$'}, {h: 16, r: 6, ans: '$AC=20; AB=24$'}, {h: 20, r: '7{,}5', ans: '$AC=25; AB=30$'}],
+                    svg: svgs.isoTriangleIn
                 },
                 {
                     text: (p) => `В равнобедрен $\\Delta ABC$ височината към основата $AB$ е $h_c = ${p.h} \\text{ cm}$, а медианата към бедрото $BC$ е $AM = ${p.m} \\text{ cm}$. Намерете дължината на основата $AB$.`,
