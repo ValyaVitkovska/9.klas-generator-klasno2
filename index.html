@@ -5,32 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Класна работа №2 - Генератор</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-            svg: { fontCache: 'global' }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- KaTeX за учебников вид на математиката -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <style>
         @media print {
-            @page { margin: 1.5cm; }
+            @page { margin: 1.5cm; size: A4; }
             body, html { background-color: white !important; margin: 0 !important; padding: 0 !important; }
             .no-print { display: none !important; }
             .variant-container { margin: 0 !important; box-shadow: none !important; padding: 0 !important; border: none !important; max-width: 100% !important; }
-            /* Строго гарантира, че всеки вариант отива на нова страница */
-            .variant-wrapper { 
-                page-break-after: always !important; 
-                break-after: page !important; 
+            
+            /* Всеки вариант ЗАДЪЛЖИТЕЛНО започва на нова страница (освен първия) */
+            .variant-wrapper {
                 display: block !important;
+                page-break-inside: auto !important;
+                break-inside: auto !important;
             }
-            /* Предотвратява празна страница на самия край на документа */
-            .variant-wrapper:last-child { 
-                page-break-after: auto !important; 
-                break-after: auto !important; 
+            .variant-wrapper + .variant-wrapper {
+                page-break-before: always !important;
+                break-before: page !important;
+            }
+            
+            /* Премахваме излишните полета между варианти при принт */
+            .variant-wrapper {
+                margin-bottom: 0 !important;
+                border-bottom: none !important;
+                padding-bottom: 0 !important;
+            }
+            
+            /* Защита срещу разцепване на задачи между страници */
+            .task-block {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            
+            /* Блокът с отговори също не се разцепва */
+            .answer-block {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                page-break-before: auto !important;
             }
         }
         .math-text { font-family: "Times New Roman", Times, serif; }
+        
+        /* Учебников вид на неравенствата */
+        .inequality-line {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        /* KaTeX display формули - подравнени отляво с отстъп, по-голям размер */
+        .katex-display {
+            text-align: left !important;
+            margin: 0.6em 0 !important;
+            padding-left: 1.5em;
+        }
+        .katex-display > .katex {
+            text-align: left !important;
+            font-size: 1.25em;
+        }
+        /* Inline математиката (отговорите) запазва нормален размер */
+        .katex { font-size: 1.05em; }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900 font-serif antialiased p-4 md:p-8">
@@ -120,29 +155,30 @@
         };
 
         const ineqA = [
-            { expr: `$(-x^2 - 1)(x^2 - 2x - 15)(x^2 + 3x) < 0$`, ans: `$x \\in (-\\infty; -3) \\cup (-3; 0) \\cup (5; +\\infty)$` },
-            { expr: `$(x^2 + 4)(x^2 - 5x + 6)(x^2 - 4) \\ge 0$`, ans: `$x \\in (-\\infty; -2] \\cup \\{2\\} \\cup [3; +\\infty)$` },
-            { expr: `$(-3x^2 - 2)(x^2 + x - 2)(x^2 - x) > 0$`, ans: `$x \\in (-2; 0)$` },
-            { expr: `$(2x^2 + 1)(x^2 - x - 12)(x^2 - 16) \\le 0$`, ans: `$x \\in [-4; -3] \\cup \\{4\\}$` },
-            { expr: `$(-x^2 - 5)(x^2 + 4x + 3)(x^2 + 3x) \\ge 0$`, ans: `$x \\in [-1; 0] \\cup \\{-3\\}$` },
-            { expr: `$(x^2 + x + 1)(x^2 - 7x + 10)(x^2 - 2x) < 0$`, ans: `$x \\in (0; 2) \\cup (2; 5)$` },
-            { expr: `$(-x^2 - 3x - 5)(x^2 + 2x - 8)(x^2 - 4) \\ge 0$`, ans: `$x \\in [-4; -2] \\cup \\{2\\}$` },
-            { expr: `$(x^2 + 2)(x^2 - 6x + 5)(x^2 - 1) \\le 0$`, ans: `$x \\in [-1; 5]$` },
-            { expr: `$(-2x^2 - 7)(x^2 - 3x - 10)(x^2 + 2x) > 0$`, ans: `$x \\in (0; 5)$` },
-            { expr: `$(x^2 + 6)(x^2 + 5x + 6)(x^2 - 9) \\le 0$`, ans: `$x \\in [-2; 3] \\cup \\{-3\\}$` }
+            { expr: `$$(-x^2 - 1)(x^2 - 2x - 15)(x^2 + 3x) < 0$$`, ans: `$x \\in (-\\infty; -3) \\cup (-3; 0) \\cup (5; +\\infty)$` },
+            { expr: `$$(x^2 + 4)(x^2 - 5x + 6)(x^2 - 4) \\ge 0$$`, ans: `$x \\in (-\\infty; -2] \\cup \\{2\\} \\cup [3; +\\infty)$` },
+            { expr: `$$(-3x^2 - 2)(x^2 + x - 2)(x^2 - x) > 0$$`, ans: `$x \\in (-2; 0)$` },
+            { expr: `$$(2x^2 + 1)(x^2 - x - 12)(x^2 - 16) \\le 0$$`, ans: `$x \\in [-4; -3] \\cup \\{4\\}$` },
+            { expr: `$$(-x^2 - 5)(x^2 + 4x + 3)(x^2 + 3x) \\ge 0$$`, ans: `$x \\in [-1; 0] \\cup \\{-3\\}$` },
+            { expr: `$$(x^2 + x + 1)(x^2 - 7x + 10)(x^2 - 2x) < 0$$`, ans: `$x \\in (0; 2) \\cup (2; 5)$` },
+            { expr: `$$(-x^2 - 3x - 5)(x^2 + 2x - 8)(x^2 - 4) \\ge 0$$`, ans: `$x \\in [-4; -2] \\cup \\{2\\}$` },
+            { expr: `$$(x^2 + 2)(x^2 - 6x + 5)(x^2 - 1) \\le 0$$`, ans: `$x \\in [-1; 5]$` },
+            { expr: `$$(-2x^2 - 7)(x^2 - 3x - 10)(x^2 + 2x) > 0$$`, ans: `$x \\in (0; 5)$` },
+            { expr: `$$(x^2 + 6)(x^2 + 5x + 6)(x^2 - 9) \\le 0$$`, ans: `$x \\in [-2; 3] \\cup \\{-3\\}$` }
         ];
 
+        // Неравенства Б) - записани в учебников вид (display style)
         const ineqB = [
-            { expr: `$\\dfrac{5}{x^2-4x+3} \\le \\dfrac{1}{x-1} + \\dfrac{2}{3-x}$`, ans: `$x \\in (-\\infty; -6] \\cup (1; 3)$` },
-            { expr: `$\\dfrac{x^2}{x+3} - \\dfrac{x}{x-1} \\le \\dfrac{4}{3-2x-x^2}$`, ans: `$x \\in (-\\infty; -3) \\cup [\\frac{1-\\sqrt{17}}{2}; 1) \\cup (1; \\frac{1+\\sqrt{17}}{2}]$` },
-            { expr: `$\\dfrac{3}{2-x-x^2} \\ge \\dfrac{1}{x+2} + \\dfrac{2}{x-1}$`, ans: `$x \\in (-\\infty; -2) \\cup (-2; 1)$` },
-            { expr: `$\\dfrac{2x}{x-2} - \\dfrac{x}{x+2} \\ge \\dfrac{4}{4-x^2}$`, ans: `$x \\in (-\\infty; -3-\\sqrt{5}] \\cup (-2; -3+\\sqrt{5}] \\cup (2; +\\infty)$` },
-            { expr: `$\\dfrac{x}{x-3} + \\dfrac{2x}{x+3} \\le \\dfrac{18}{9-x^2}$`, ans: `$x \\in (-3; 3)$` },
-            { expr: `$\\dfrac{x}{x-1} \\ge \\dfrac{5}{1-x^2} + \\dfrac{1}{x+1}$`, ans: `$x \\in (-\\infty; -1) \\cup (1; +\\infty)$` },
-            { expr: `$\\dfrac{x^2+1}{x-2} + \\dfrac{x-1}{x+2} \\le \\dfrac{8}{4-x^2}$`, ans: `Решение чрез М.И.` },
-            { expr: `$\\dfrac{3x}{x+1} - \\dfrac{2}{1-x} \\ge \\dfrac{5x}{x^2-1}$`, ans: `$x \\in (-\\infty; -1) \\cup [\\frac{3-\\sqrt{3}}{3}; 1) \\cup [\\frac{3+\\sqrt{3}}{3}; +\\infty)$` },
-            { expr: `$\\dfrac{1}{x} + \\dfrac{x}{x-2} \\le \\dfrac{2}{2x-x^2}$`, ans: `$x \\in [-1; 0) \\cup (0; 2)$` },
-            { expr: `$\\dfrac{x+3}{x-1} + \\dfrac{x-3}{x+1} \\le \\dfrac{4}{1-x^2}$`, ans: `$x \\in (-1; 1)$` }
+            { expr: `$$\\frac{5}{x^2-4x+3} \\le \\frac{1}{x-1} + \\frac{2}{3-x}$$`, ans: `$x \\in (-\\infty; -6] \\cup (1; 3)$` },
+            { expr: `$$\\frac{x^2}{x+3} - \\frac{x}{x-1} \\le \\frac{4}{3-2x-x^2}$$`, ans: `$x \\in (-\\infty; -3) \\cup [\\frac{1-\\sqrt{17}}{2}; 1) \\cup (1; \\frac{1+\\sqrt{17}}{2}]$` },
+            { expr: `$$\\frac{3}{2-x-x^2} \\ge \\frac{1}{x+2} + \\frac{2}{x-1}$$`, ans: `$x \\in (-\\infty; -2) \\cup (-2; 1)$` },
+            { expr: `$$\\frac{2x}{x-2} - \\frac{x}{x+2} \\ge \\frac{4}{4-x^2}$$`, ans: `$x \\in (-\\infty; -3-\\sqrt{5}] \\cup (-2; -3+\\sqrt{5}] \\cup (2; +\\infty)$` },
+            { expr: `$$\\frac{x}{x-3} + \\frac{2x}{x+3} \\le \\frac{18}{9-x^2}$$`, ans: `$x \\in (-3; 3)$` },
+            { expr: `$$\\frac{x}{x-1} \\ge \\frac{5}{1-x^2} + \\frac{1}{x+1}$$`, ans: `$x \\in (-\\infty; -1) \\cup (1; +\\infty)$` },
+            { expr: `$$\\frac{4}{x^2+2x-3} \\ge \\frac{x+2}{x+3} + \\frac{x+1}{1-x}$$`, ans: `$x \\in (1; +\\infty)$` },
+            { expr: `$$\\frac{3x}{x+1} - \\frac{2}{1-x} \\ge \\frac{5x}{x^2-1}$$`, ans: `$x \\in (-\\infty; -1) \\cup [\\frac{3-\\sqrt{3}}{3}; 1) \\cup [\\frac{3+\\sqrt{3}}{3}; +\\infty)$` },
+            { expr: `$$\\frac{1}{x} + \\frac{x}{x-2} \\le \\frac{2}{2x-x^2}$$`, ans: `$x \\in [-1; 0) \\cup (0; 2)$` },
+            { expr: `$$\\frac{x+3}{x-1} + \\frac{x-3}{x+1} \\le \\frac{4}{1-x^2}$$`, ans: `$x \\in (-1; 1)$` }
         ];
 
         const tasksData = {
@@ -359,7 +395,7 @@
 
                         <div class="space-y-8">
                             <!-- Задача 1 -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+                            <div class="task-block grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
                                 <div class="col-span-3">
                                     <p><span class="font-bold">1.</span> (4 т.) ${t1.text(p1)}</p>
                                 </div>
@@ -367,7 +403,7 @@
                             </div>
 
                             <!-- Задача 2 -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+                            <div class="task-block grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
                                 <div class="col-span-3">
                                     <p><span class="font-bold">2.</span> (4 т.) ${t2.text(p2)}</p>
                                 </div>
@@ -375,14 +411,14 @@
                             </div>
 
                             <!-- Задача 3 -->
-                            <div>
+                            <div class="task-block">
                                 <p><span class="font-bold">3.</span> Да се решат неравенствата:</p>
-                                <p class="ml-4 mt-2">А) (4 т.) ${t3A.expr}</p>
-                                <p class="ml-4 mt-4">Б) (5 т.) ${t3B.expr}</p>
+                                <p class="ml-4 inequality-line">А) (4 т.) ${t3A.expr}</p>
+                                <p class="ml-4 inequality-line">Б) (5 т.) ${t3B.expr}</p>
                             </div>
 
                             <!-- Задача 4 -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+                            <div class="task-block grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
                                 <div class="col-span-3">
                                     <p><span class="font-bold">4.</span> (4 т.) ${t4.text(p4)}</p>
                                 </div>
@@ -390,7 +426,7 @@
                             </div>
 
                             <!-- Задача 5 -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+                            <div class="task-block grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
                                 <div class="col-span-3">
                                     <p><span class="font-bold">5.</span> (5 т.) ${t5.text(p5)}</p>
                                 </div>
@@ -398,7 +434,7 @@
                             </div>
 
                             <!-- Задача 6 -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
+                            <div class="task-block grid grid-cols-1 md:grid-cols-4 gap-6 items-center">
                                 <div class="col-span-3">
                                     <p><span class="font-bold">6.</span> (7 т.) ${t6.text(p6)}</p>
                                 </div>
@@ -406,7 +442,7 @@
                             </div>
 
                             <!-- Задача 7 -->
-                            <div>
+                            <div class="task-block">
                                 <p><span class="font-bold">7.</span> (7 т.) ${t7.text(p7)}</p>
                             </div>
                         </div>
@@ -430,14 +466,36 @@
                 container.insertAdjacentHTML('beforeend', variantHTML);
             }
 
-            // Рендиране на математическите формули чрез MathJax
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise();
+            // Рендиране на математическите формули чрез KaTeX
+            if (window.renderMathInElement) {
+                renderMathInElement(container, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false,
+                    strict: false
+                });
             }
         }
 
-        // Генериране при първоначално зареждане
-        window.onload = generateAll;
+        // Изчакваме KaTeX да се зареди преди първото рендиране
+        window.onload = function() {
+            // Малко изчакване, за да гарантираме, че auto-render.min.js е готов
+            if (window.renderMathInElement) {
+                generateAll();
+            } else {
+                // Polling, докато скриптовете се заредят
+                const checkKaTeX = setInterval(function() {
+                    if (window.renderMathInElement) {
+                        clearInterval(checkKaTeX);
+                        generateAll();
+                    }
+                }, 50);
+            }
+        };
     </script>
 </body>
 </html>
