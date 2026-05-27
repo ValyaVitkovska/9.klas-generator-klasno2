@@ -4,7 +4,154 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Класна работа №2 - Генератор</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Минимални Tailwind-подобни класове, ползвани в проекта */
+        * { box-sizing: border-box; }
+        body { font-family: ui-serif, Georgia, "Times New Roman", serif; -webkit-font-smoothing: antialiased; color: #111827; background-color: #f3f4f6; padding: 1rem; margin: 0; }
+        @media (min-width: 768px) { body { padding: 2rem; } }
+        
+        /* Layout */
+        .max-w-5xl { max-width: 64rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .bg-white { background-color: #ffffff; }
+        .bg-gray-100 { background-color: #f3f4f6; }
+        .bg-blue-600 { background-color: #2563eb; }
+        .bg-blue-600:hover, .hover\:bg-blue-700:hover { background-color: #1d4ed8; }
+        .bg-purple-600 { background-color: #9333ea; }
+        .bg-purple-600:hover, .hover\:bg-purple-700:hover { background-color: #7e22ce; }
+        .bg-purple-50 { background-color: #faf5ff; }
+        .bg-green-600 { background-color: #16a34a; }
+        .bg-green-600:hover, .hover\:bg-green-700:hover { background-color: #15803d; }
+        .bg-gray-600 { background-color: #4b5563; }
+        .bg-gray-600:hover, .hover\:bg-gray-700:hover { background-color: #374151; }
+        
+        .text-white { color: #ffffff; }
+        .text-blue-700 { color: #1d4ed8; }
+        .text-purple-800 { color: #6b21a8; }
+        .text-gray-400 { color: #9ca3af; }
+        .text-gray-500 { color: #6b7280; }
+        .text-gray-600 { color: #4b5563; }
+        .text-gray-700 { color: #374151; }
+        .text-gray-800 { color: #1f2937; }
+        .text-gray-900 { color: #111827; }
+        
+        .border { border-width: 1px; border-style: solid; }
+        .border-gray-200 { border-color: #e5e7eb; }
+        .border-gray-300 { border-color: #d1d5db; }
+        .border-gray-500 { border-color: #6b7280; }
+        .border-purple-200 { border-color: #e9d5ff; }
+        .border-blue-500 { border-color: #3b82f6; }
+        .border-l-4 { border-left-width: 4px; border-left-style: solid; }
+        .border-b-2 { border-bottom-width: 2px; border-bottom-style: solid; }
+        .border-b-\[1\.5px\] { border-bottom-width: 1.5px; border-bottom-style: solid; }
+        .border-dotted { border-style: dotted; }
+        
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); }
+        .shadow { box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1); }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+        
+        .rounded { border-radius: 0.25rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        
+        /* Padding & Margin */
+        .p-2 { padding: 0.5rem; }
+        .p-4 { padding: 1rem; }
+        .p-5 { padding: 1.25rem; }
+        .p-6 { padding: 1.5rem; }
+        .p-8 { padding: 2rem; }
+        @media (min-width: 768px) { .md\:p-8 { padding: 2rem; } .md\:p-12 { padding: 3rem; } }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .pb-2 { padding-bottom: 0.5rem; }
+        .pb-12 { padding-bottom: 3rem; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mb-10 { margin-bottom: 2.5rem; }
+        .mb-16 { margin-bottom: 4rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-10 { margin-top: 2.5rem; }
+        .ml-2 { margin-left: 0.5rem; }
+        .ml-4 { margin-left: 1rem; }
+        .mr-2 { margin-right: 0.5rem; }
+        
+        /* Spacing */
+        .space-y-8 > * + * { margin-top: 2rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .gap-x-8 { column-gap: 2rem; }
+        .gap-y-3 { row-gap: 0.75rem; }
+        
+        /* Width / Height */
+        .w-5 { width: 1.25rem; }
+        .w-20 { width: 5rem; }
+        .w-24 { width: 6rem; }
+        .w-32 { width: 8rem; }
+        .w-36 { width: 9rem; }
+        .w-full { width: 100%; }
+        .h-5 { height: 1.25rem; }
+        .min-w-\[200px\] { min-width: 200px; }
+        .max-w-\[180px\] { max-width: 180px; }
+        
+        /* Flex / Grid */
+        .flex { display: flex; }
+        .flex-1 { flex: 1 1 0%; }
+        .flex-wrap { flex-wrap: wrap; }
+        .items-center { align-items: center; }
+        .items-end { align-items: flex-end; }
+        .justify-center { justify-content: center; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        @media (min-width: 768px) { .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        .col-span-1 { grid-column: span 1 / span 1; }
+        .col-span-3 { grid-column: span 3 / span 3; }
+        .col-span-full { grid-column: 1 / -1; }
+        
+        /* Typography */
+        .font-serif { font-family: ui-serif, Georgia, "Times New Roman", serif; }
+        .font-sans { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .text-center { text-align: center; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-base { font-size: 1rem; line-height: 1.5rem; }
+        .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+        @media (min-width: 768px) { .md\:text-lg { font-size: 1.125rem; line-height: 1.75rem; } }
+        .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+        .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+        .text-\[10px\] { font-size: 10px; }
+        .uppercase { text-transform: uppercase; }
+        .tracking-wider { letter-spacing: 0.05em; }
+        .tracking-widest { letter-spacing: 0.1em; }
+        .whitespace-nowrap { white-space: nowrap; }
+        .antialiased { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        
+        /* Position */
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .right-0 { right: 0; }
+        .top-0 { top: 0; }
+        
+        /* Misc */
+        .hidden { display: none; }
+        .cursor-pointer { cursor: pointer; }
+        .transition { transition-property: color, background-color, border-color, fill, stroke; transition-duration: 150ms; }
+        .break-inside-avoid { break-inside: avoid; }
+        
+        /* Focus ring */
+        .focus\:outline-none:focus { outline: 2px solid transparent; outline-offset: 2px; }
+        .focus\:ring-2:focus { box-shadow: 0 0 0 2px #3b82f6; }
+        .focus\:ring-blue-500:focus { box-shadow: 0 0 0 2px #3b82f6; }
+        
+        /* Button base */
+        button { font-family: inherit; cursor: pointer; border: none; }
+        input { font-family: inherit; }
+    </style>
     <!-- KaTeX за учебников вид на математиката -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -272,31 +419,37 @@
             ],
             task6: [
                 {
+                    hasCircle: true, // описана окръжност
                     text: (p) => `В равнобедрен $\\Delta ABC$ основата е $AB = ${p.c} \\text{ cm}$, а бедрото е $AC = BC = ${p.a} \\text{ cm}$. Да се намери радиусът $R$ на описаната около триъгълника окръжност.`,
                     params: [{c: 12, a: 10, ans: '$6{,}25$'}, {c: 16, a: 17, ans: '$\\frac{289}{30}$'}, {c: 24, a: 15, ans: '$12{,}5$'}, {c: 10, a: 13, ans: '$\\frac{169}{24}$'}, {c: 24, a: 13, ans: '$16{,}9$'}, {c: 30, a: 25, ans: '$15{,}625$'}],
                     svg: svgs.isoTriangle
                 },
                 {
+                    hasCircle: false, // без окръжност (медиана към бедрото)
                     text: (p) => `В равнобедрен $\\Delta ABC$ основата е $AB = ${p.c} \\text{ cm}$, а бедрото е $AC = BC = ${p.a} \\text{ cm}$. Да се намери дължината на медианата $AM$ към бедрото $BC$.`,
                     params: [{c: 8, a: 14, ans: '9'}, {c: 12, a: 34, ans: '19'}, {c: 12, a: 10, ans: '$\\sqrt{97}$'}, {c: 16, a: 10, ans: '$3\\sqrt{17}$'}, {c: 24, a: 15, ans: '$\\frac{9\\sqrt{17}}{2}$'}],
                     svg: svgs.isoTriangleMedNoCircle
                 },
                 {
+                    hasCircle: true, // вписана окръжност
                     text: (p) => `В равнобедрен $\\Delta ABC$ основата е $AB = ${p.c} \\text{ cm}$, а бедрото е $AC = BC = ${p.a} \\text{ cm}$. Да се намери радиусът $r$ на вписаната в триъгълника окръжност.`,
                     params: [{c: 12, a: 10, ans: '3'}, {c: 16, a: 17, ans: '4{,}8'}, {c: 24, a: 15, ans: '4'}, {c: 10, a: 13, ans: '$\\frac{10}{3}$'}, {c: 30, a: 25, ans: '7{,}5'}],
                     svg: svgs.isoTriangleIn
                 },
                 {
+                    hasCircle: true, // описана окръжност
                     text: (p) => `В равнобедрен $\\Delta ABC$ основата е $AB = ${p.c} \\text{ cm}$, а височината към нея е $h_c = ${p.h} \\text{ cm}$. Да се намери радиусът $R$ на описаната около триъгълника окръжност.`,
                     params: [{c: 12, h: 8, ans: '$6{,}25$'}, {c: 16, h: 15, ans: '$\\frac{289}{30}$'}, {c: 24, h: 9, ans: '$12{,}5$'}, {c: 10, h: 12, ans: '$\\frac{169}{24}$'}, {c: 30, h: 20, ans: '$\\frac{625}{40}$'}],
                     svg: svgs.isoTriangleH
                 },
                 {
+                    hasCircle: true, // вписана окръжност
                     text: (p) => `В равнобедрен $\\Delta ABC$ височината към основата $AB$ е $h_c = ${p.h} \\text{ cm}$, а радиусът на вписаната окръжност е $r = ${p.r} \\text{ cm}$. Да се намерят дължините на бедрото и основата на триъгълника.`,
                     params: [{h: 8, r: 3, ans: '$AC=10; AB=12$'}, {h: 12, r: '\\frac{10}{3}', ans: '$AC=13; AB=10$'}, {h: 15, r: '4{,}8', ans: '$AC=17; AB=16$'}, {h: 16, r: 6, ans: '$AC=20; AB=24$'}, {h: 20, r: '7{,}5', ans: '$AC=25; AB=30$'}],
                     svg: svgs.isoTriangleIn
                 },
                 {
+                    hasCircle: false, // без окръжност
                     text: (p) => `В равнобедрен $\\Delta ABC$ височината към основата $AB$ е $h_c = ${p.h} \\text{ cm}$, а медианата към бедрото $BC$ е $AM = ${p.m} \\text{ cm}$. Намерете дължината на основата $AB$.`,
                     params: [{h: 18, m: 15, ans: '16'}, {h: 24, m: 15, ans: '12'}, {h: 12, m: '7{,}5', ans: '6'}, {h: 36, m: 30, ans: '32'}, {h: 30, m: 39, ans: '48'}, {h: 15, m: '19{,}5', ans: '24'}],
                     svg: svgs.isoTriangleMedNoCircle
@@ -304,20 +457,45 @@
             ],
             task7: [
                 {
+                    hasCircle: true, // окръжност вписана в трапеца
                     text: (p) => `Около окръжност с радиус $r = ${p.r} \\text{ cm}$ е описан равнобедрен трапец с бедро $${p.a} \\text{ cm}$. Да се намерят основите и лицето на трапеца.`,
                     params: [{r: 6, a: 13, ans: 'Основи 18 и 8; $S=156$'}, {r: 4, a: 17, ans: 'Основи 32 и 2; $S=136$'}, {r: '4{,}5', a: 15, ans: 'Основи 27 и 3; $S=135$'}, {r: 10, a: 25, ans: 'Основи 40 и 10; $S=500$'}, {r: 12, a: 25, ans: 'Основи 32 и 18; $S=600$'}]
                 },
                 {
+                    hasCircle: true, // окръжност вписана в трапеца
                     text: (p) => `Около окръжност е описан правоъгълен трапец с основи $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$. Да се намерят бедрата на трапеца и радиуса на окръжността.`,
                     params: [{ab: 6, cd: 3, ans: '$AD=4; BC=5; r=2$'}, {ab: 15, cd: 10, ans: '$AD=12; BC=13; r=6$'}, {ab: 20, cd: 12, ans: '$AD=15; BC=17; r=7{,}5$'}, {ab: 28, cd: 21, ans: '$AD=24; BC=25; r=12$'}]
                 },
                 {
+                    hasCircle: true, // трапец вписан в окръжност (не се търси радиус)
                     text: (p) => `Трапец е вписан в окръжност. Основите му са $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$, а височината му е $${p.h} \\text{ cm}$. Да се намерят бедрото и диагоналът на трапеца.`,
                     params: [{ab: 21, cd: 9, h: 8, ans: 'Бедро 10; Диагонал 17'}, {ab: 14, cd: 4, h: 12, ans: 'Бедро 13; Диагонал 15'}, {ab: 21, cd: 11, h: 12, ans: 'Бедро 13; Диагонал 20'}, {ab: 25, cd: 7, h: 12, ans: 'Бедро 15; Диагонал 20'}, {ab: 28, cd: 12, h: 15, ans: 'Бедро 17; Диагонал 25'}, {ab: 25, cd: 11, h: 24, ans: 'Бедро 25; Диагонал 30'}]
                 },
                 {
+                    hasCircle: true, // трапец вписан в окръжност (не се търси радиус)
                     text: (p) => `Трапец е вписан в окръжност. Оснoвите му са $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$, а бедрото е $${p.bc} \\text{ cm}$. Да се намерят височината и диагоналите на трапеца.`,
                     params: [{ab: 21, cd: 9, bc: 10, ans: '$h=8; d=17$'}, {ab: 14, cd: 4, bc: 13, ans: '$h=12; d=15$'}, {ab: 21, cd: 11, bc: 13, ans: '$h=12; d=20$'}, {ab: 25, cd: 7, bc: 15, ans: '$h=12; d=20$'}, {ab: 28, cd: 12, bc: 17, ans: '$h=15; d=25$'}, {ab: 25, cd: 11, bc: 25, ans: '$h=24; d=30$'}]
+                },
+                {
+                    hasCircle: false, // без окръжност - равнобедрен трапец
+                    text: (p) => `В равнобедрен трапец основите са $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$, а височината е $${p.h} \\text{ cm}$. Да се намерят бедрото и диагоналът на трапеца.`,
+                    params: [{ab: 21, cd: 9, h: 8, ans: 'Бедро 10; Диагонал 17'}, {ab: 14, cd: 4, h: 12, ans: 'Бедро 13; Диагонал 15'}, {ab: 21, cd: 11, h: 12, ans: 'Бедро 13; Диагонал 20'}, {ab: 25, cd: 7, h: 12, ans: 'Бедро 15; Диагонал 20'}, {ab: 28, cd: 12, h: 15, ans: 'Бедро 17; Диагонал 25'}, {ab: 25, cd: 11, h: 24, ans: 'Бедро 25; Диагонал 30'}]
+                },
+                {
+                    hasCircle: false, // без окръжност - равнобедрен трапец
+                    text: (p) => `В равнобедрен трапец основите са $${p.ab} \\text{ cm}$ и $${p.cd} \\text{ cm}$, а бедрото е $${p.bc} \\text{ cm}$. Да се намерят височината и диагоналът на трапеца.`,
+                    params: [{ab: 21, cd: 9, bc: 10, ans: '$h=8; d=17$'}, {ab: 14, cd: 4, bc: 13, ans: '$h=12; d=15$'}, {ab: 21, cd: 11, bc: 13, ans: '$h=12; d=20$'}, {ab: 25, cd: 7, bc: 15, ans: '$h=12; d=20$'}, {ab: 28, cd: 12, bc: 17, ans: '$h=15; d=25$'}, {ab: 25, cd: 11, bc: 25, ans: '$h=24; d=30$'}]
+                },
+                {
+                    hasCircle: false, // без окръжност - правоъгълен трапец
+                    text: (p) => `В правоъгълен трапец $ABCD$ ($AB \\parallel CD$, $\\angle A = \\angle D = 90^\\circ$) основите са $AB = ${p.ab} \\text{ cm}$ и $CD = ${p.cd} \\text{ cm}$, а височината $AD = ${p.h} \\text{ cm}$. Да се намери бедрото $BC$ и диагоналът $BD$.`,
+                    params: [
+                        {ab: 15, cd: 9, h: 8, ans: '$BC=10; BD=17$'},
+                        {ab: 16, cd: 11, h: 12, ans: '$BC=13; BD=20$'},
+                        {ab: 16, cd: 7, h: 12, ans: '$BC=15; BD=20$'},
+                        {ab: 20, cd: 12, h: 15, ans: '$BC=17; BD=25$'},
+                        {ab: 9, cd: 4, h: 12, ans: '$BC=13; BD=15$'}
+                    ]
                 }
             ]
         };
@@ -331,21 +509,31 @@
             return item;
         }
 
+        // Избира случаен елемент от масив, изключвайки определен елемент И прилагайки филтър
+        function pickFiltered(arr, excludeItem, filterFn) {
+            const candidates = arr.filter(t => t !== excludeItem && (filterFn ? filterFn(t) : true));
+            if (candidates.length === 0) {
+                // Ако филтрираните кандидати са нула (рядко), отстъпваме само на филтъра
+                const fallback = arr.filter(t => filterFn ? filterFn(t) : true);
+                return fallback[Math.floor(Math.random() * fallback.length)];
+            }
+            return candidates[Math.floor(Math.random() * candidates.length)];
+        }
+
         function generateAll() {
             const container = document.getElementById('variantsContainer');
             container.innerHTML = '';
             const count = parseInt(document.getElementById('variantCount').value) || 3;
 
-            // Променливи за запазване на задачите от предходния генериран вариант
+            // Запазваме шаблоните от предходния вариант, за да не се повтарят
             let prevT1 = null, prevT2 = null, prevT3A = null, prevT3B = null;
             let prevT4 = null, prevT5 = null, prevT6 = null, prevT7 = null;
 
             for (let i = 1; i <= count; i++) {
-                
-                // Избор на случайни шаблони (с гаранция, че не се повтаря същият тип като в предния вариант)
+                // Избор на шаблони - различни от тези в предходния вариант
                 const t1 = getRandomItem(tasksData.task1, prevT1); prevT1 = t1;
                 const p1 = getRandomItem(t1.params);
-                
+
                 const t2 = getRandomItem(tasksData.task2, prevT2); prevT2 = t2;
                 const p2 = getRandomItem(t2.params);
 
@@ -358,10 +546,27 @@
                 const t5 = getRandomItem(tasksData.task5, prevT5); prevT5 = t5;
                 const p5 = getRandomItem(t5.params);
 
-                const t6 = getRandomItem(tasksData.task6, prevT6); prevT6 = t6;
-                const p6 = getRandomItem(t6.params);
+                // === КООРДИНАЦИЯ МЕЖДУ ЗАДАЧА 6 И ЗАДАЧА 7 ===
+                // Правило: ако едната задача има окръжност, другата няма
+                // На случаен принцип решаваме коя ще е с окръжност:
+                //   - вариант A: задача 6 има окръжност, задача 7 няма
+                //   - вариант B: задача 6 няма окръжност, задача 7 има
 
-                const t7 = getRandomItem(tasksData.task7, prevT7); prevT7 = t7;
+                const circleInTask6 = Math.random() < 0.5; // 50/50 кой ще е с окръжност
+
+                let t6, t7;
+                if (circleInTask6) {
+                    // Задача 6 с окръжност, задача 7 без
+                    t6 = pickFiltered(tasksData.task6, prevT6, t => t.hasCircle);
+                    t7 = pickFiltered(tasksData.task7, prevT7, t => !t.hasCircle);
+                } else {
+                    // Задача 6 без окръжност, задача 7 с окръжност
+                    t6 = pickFiltered(tasksData.task6, prevT6, t => !t.hasCircle);
+                    t7 = pickFiltered(tasksData.task7, prevT7, t => t.hasCircle);
+                }
+                prevT6 = t6;
+                prevT7 = t7;
+                const p6 = getRandomItem(t6.params);
                 const p7 = getRandomItem(t7.params);
 
                 // Изграждане на HTML-а за конкретния вариант
